@@ -29,11 +29,9 @@ RUN chmod -R 777 /opt/jolokia && \
       ngrep \
       bash \
       tzdata && \
-    mkdir $HOME && \
-    mkdie $HOME/application
+    mkdir $HOME
 
-
-ADD bin $HOME
+ADD bin $HOME/bin
 
 RUN chmod -R 777 $HOME
 

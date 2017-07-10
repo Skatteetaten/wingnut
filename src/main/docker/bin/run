@@ -33,8 +33,9 @@ fi
 
 JAVA_DEBUG_ARGS=""
 if [ "x${REMOTE_DEBUG}" == "xtrue" ]; then
-  export JAVA_DEBUG_ARGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${DEBUG_PORT}"
+  JAVA_DEBUG_ARGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${DEBUG_PORT}"
 fi
+export JAVA_DEBUG_ARGS
 
 cd application
 echo "Starting application in $(pwd)... $(date)"
