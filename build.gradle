@@ -1,0 +1,54 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+  repositories {
+    maven {
+      url "${nexusUrl}/content/groups/public"
+    }
+  }
+  dependencies {
+    classpath(
+        "ske.aurora.gradle.plugins:aurora-gradle-plugin:1.7.1",
+        "ske.aurora.gradle.plugins:aurora-docker-plugin:1.1.3"
+    )
+  }
+}
+
+
+apply plugin: 'base'
+apply plugin: 'ske.plugins.aurora'
+apply plugin: 'ske.plugins.aurora-docker'
+
+auroradocker {
+  imageName = 'aurora/wingnut'
+  workingDir = "$buildDir/docker"
+}
+
+
+task copyResources {
+  doLast {
+    copy {
+      from('src/main/docker')
+      into "$buildDir/docker"
+    }
+    copy {
+      from 'src/main/docker/Dockerfile'
+      into "$buildDir/docker"
+      filter(ReplaceTokens, tokens: [
+          alpineVersion   : "3.6",
+          jolokiaVersion  : "1.3.7",
+          javaMajorVersion: "8",
+          javaMinorVersion: "131",
+          javaBuildVersion: "11-r2",
+          baseImageVersion: version
+      ])
+    }
+  }
+}
+
+buildImage.dependsOn copyResources
+
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "3.4"
+}
