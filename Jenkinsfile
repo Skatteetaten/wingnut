@@ -16,9 +16,6 @@ node {
     sh "./gradlew clean upload"
   }
 
-  stage('Generate Reports') {
-    step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/**/*.xml'])
-  }
 
   stage('Build Docker image') {
     openshift.buildImage('wingnut', git.getCommitId())
