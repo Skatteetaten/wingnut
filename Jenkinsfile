@@ -13,7 +13,7 @@ node {
   }
 
   stage('Build') {
-    sh "./gradlew clean test upload"
+    sh "./gradlew clean upload"
   }
 
   stage('Generate Reports') {
