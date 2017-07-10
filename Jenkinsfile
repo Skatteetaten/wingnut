@@ -13,9 +13,8 @@ node {
   }
 
   stage('Build') {
-    sh "./gradlew clean upload"
+    sh "./gradlew clean buildImage"
   }
-
 
   stage('Build Docker image') {
     openshift.buildImage('wingnut', git.getCommitId())
