@@ -1,5 +1,8 @@
 import java.text.SimpleDateFormat
 import java.util.Date
+import ske.aurora.gradle.plugins.docker.DockerTools
+import ske.aurora.gradle.plugins.docker.ProcessTools
+import java.io.*
 
 buildscript {
   repositories {
@@ -9,7 +12,7 @@ buildscript {
   }
   dependencies {
     classpath(
-        "ske.aurora.gradle.plugins:aurora-gradle-plugin:1.7.1",
+        "no.skatteetaten.aurora.gradle.plugins:aurora-gradle-plugin:1.1.0",
         "ske.aurora.gradle.plugins:aurora-docker-plugin:1.1.4"
     )
   }
@@ -29,8 +32,12 @@ def static gitSha() {
 
 }
 
+ext.aurora = [
+    requireStaging: false
+]
+
 apply plugin: 'base'
-apply plugin: 'ske.plugins.aurora'
+apply plugin: 'no.skatteetaten.plugins.aurora'
 apply plugin: 'ske.plugins.aurora-docker'
 
 auroradocker {
@@ -47,6 +54,51 @@ auroradocker {
   ]
 }
 
+
+task tagTestImage() {
+  dependsOn buildImage
+  doLast {
+    println "Tag test build image for testing"
+
+    String cmd = """docker tag aurora/wingnut:$version aurora/wingnut:testing"""
+
+
+    println cmd
+    ProcessTools.Result result = ProcessTools.runCommand(cmd)
+    if (result.process.exitValue() != 0) {
+      throw new GradleException("Image build failed. Inspect output.")
+    }
+    ext.imageId = DockerTools.getImageIdFromOutput(result.output)
+  }
+}
+
+task testImage() {
+  dependsOn tagTestImage
+  doLast {
+    println "Build example image"
+
+    String cmd = """docker build example"""
+
+    println cmd
+    ProcessTools.Result result = ProcessTools.runCommand(cmd)
+    if (result.process.exitValue() != 0) {
+      throw new GradleException("Image build failed. Inspect output.")
+    }
+    ext.imageId = DockerTools.getImageIdFromOutput(result.output)
+  }
+}
+
+
+task testOutputImage() {
+  dependsOn testImage
+  doLast {
+    ProcessTools.Result result = ProcessTools.runCommand("""docker run -m 512m --memory-swap -1 --cpu-period=100000 --cpu-quota=150000 -i $testImage.imageId""")
+    if (result.process.exitValue() != 0) {
+      throw new GradleException("Unable to run image. Inspect output for details.")
+    }
+    assert result.output.contains("JAVA_OPTS=-Xmx410m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2")
+  }
+}
 
 task wrapper(type: Wrapper) {
   gradleVersion = "3.4"

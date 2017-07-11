@@ -24,3 +24,6 @@ see example directory for a very basic Dockerfile that builds a java image
 ## Credits
 The logic to calculate max memory and CPU is inspired from the work at 
 https://github.com/fabric8io-images/java. Slightly tweaked to suit our needs in some places
+
+## How to test
+./gradlew testOutputImage
