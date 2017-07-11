@@ -6,9 +6,9 @@ import java.io.*
 
 buildscript {
   repositories {
-    maven {
-      url "${nexusUrl}/content/groups/public"
-    }
+    mavenCentral()
+    jcenter()
+    mavenLocal()
   }
   dependencies {
     classpath(
@@ -16,6 +16,12 @@ buildscript {
         "no.skatteetaten.aurora.gradle.plugins:aurora-docker-plugin:1.0.1"
     )
   }
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+  mavenLocal()
 }
 
 //TODO move to plugin
@@ -33,7 +39,9 @@ def static gitSha() {
 }
 
 ext.aurora = [
-    requireStaging: false
+    requireStaging: false,
+    applyNexusRepositories: false
+
 ]
 
 apply plugin: 'base'
