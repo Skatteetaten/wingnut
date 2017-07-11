@@ -1,4 +1,5 @@
-import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
 buildscript {
   repositories {
@@ -12,6 +13,20 @@ buildscript {
         "ske.aurora.gradle.plugins:aurora-docker-plugin:1.1.4"
     )
   }
+}
+
+//TODO move to plugin
+def static buildTime() {
+  def df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+  df.setTimeZone(TimeZone.getTimeZone("UTC"))
+  return df.format(new Date())
+}
+
+def static gitSha() {
+  def cmd = "git rev-parse --short HEAD"
+  def proc = cmd.execute()
+  return proc.text.trim()
+
 }
 
 
@@ -28,9 +43,16 @@ auroradocker {
       javaMajorVersion: "8",
       javaMinorVersion: "131",
       javaBuildVersion: "11-r2",
-      baseImageVersion: version
+      baseImageVersion: version,
+      buildDate: buildTime(),
+      gitSha: gitSha()
+
+
   ]
 }
+
+
+
 
 task wrapper(type: Wrapper) {
   gradleVersion = "3.4"

@@ -8,6 +8,8 @@ ARG javaMinorVersion
 ARG javaBuildVersion
 ARG jolokiaVersion
 ARG baseImageVersion
+ARG buildDate
+ARG gitSha
 
 MAINTAINER The Norwegian Tax Administration <utvpaas@skatteetaten.no>
 
@@ -49,7 +51,15 @@ WORKDIR ${HOME}
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/u01/bin/run"]
 
-LABEL java openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}
-LABEL alpine ${ALPINE_VERSION}
-LABEL jolokia ${JOLOKIA_VERSION}
-LABEL version ${BASE_IMAGE_VERSION}
+
+LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
+      alpine=${ALPINE_VERSION} \
+      jolokia=${JOLOKIA_VERSION} \
+      version=${BASE_IMAGE_VERSION} \
+      org.label-schema.build-date=${buildDate} \
+      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.license="Apache License - Version 2.0" \
+      org.label-schema.name="Wingnut - Cloud Ready Openshift OpenJDK baseimage " \
+      org.label-schema.vcs-ref=${gitSha} \
+      org.label-schema.vcs-type="Github" \
+      org.label-schema.vcs-url="https://github.com/skatteetaten/wingnut"
