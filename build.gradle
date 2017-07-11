@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 import java.util.Date
-import ske.aurora.gradle.plugins.docker.DockerTools
-import ske.aurora.gradle.plugins.docker.ProcessTools
+import no.skatteetaten.aurora.gradle.plugins.docker.DockerTools
+import no.skatteetaten.aurora.gradle.plugins.docker.ProcessTools
 import java.io.*
 
 buildscript {
@@ -13,7 +13,7 @@ buildscript {
   dependencies {
     classpath(
         "no.skatteetaten.aurora.gradle.plugins:aurora-gradle-plugin:1.1.0",
-        "ske.aurora.gradle.plugins:aurora-docker-plugin:1.1.4"
+        "no.skatteetaten.aurora.gradle.plugins:aurora-docker-plugin:1.0.1"
     )
   }
 }
@@ -38,7 +38,7 @@ ext.aurora = [
 
 apply plugin: 'base'
 apply plugin: 'no.skatteetaten.plugins.aurora'
-apply plugin: 'ske.plugins.aurora-docker'
+apply plugin: 'no.skatteetaten.plugins.aurora-docker'
 
 auroradocker {
   imageName = 'aurora/wingnut'
