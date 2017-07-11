@@ -1,8 +1,4 @@
 FROM alpine:3.6
-# cannot set this as buildArg
-# see https://github.com/docker-library/openjdk/blob/master/8-jre/alpine/Dockerfile
-
-ARG alpineVersion
 ARG javaMajorVersion=8
 ARG javaMinorVersion
 ARG javaBuildVersion
@@ -12,6 +8,18 @@ ARG buildDate
 ARG gitSha
 
 MAINTAINER The Norwegian Tax Administration <utvpaas@skatteetaten.no>
+
+LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
+      alpine=3.6 \
+      jolokia=${JOLOKIA_VERSION} \
+      version=${BASE_IMAGE_VERSION} \
+      org.label-schema.build-date=${buildDate} \
+      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.license="Apache License - Version 2.0" \
+      org.label-schema.name="Wingnut - Cloud Ready Openshift OpenJDK baseimage" \
+      org.label-schema.vcs-ref=${gitSha} \
+      org.label-schema.vcs-type="Github" \
+      org.label-schema.vcs-url="https://github.com/skatteetaten/wingnut"
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.${javaMajorVersion}-openjdk
 
@@ -25,7 +33,8 @@ ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
     BASE_IMAGE_VERSION=${baseImageVersion} \
-    ALPINE_VERSION=${alpineVersion} \
+    ALPINE_VERSION=3.6\
+    TRUST_STORE=$JAVA_HOME/jre/lib/security/cacerts \
     TZ="Europe/Oslo"
 
 ADD jolokia /opt/jolokia
@@ -47,19 +56,6 @@ RUN chmod -R 777 $HOME
 
 WORKDIR ${HOME}
 
-
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
 CMD ["/u01/bin/run"]
-
-
-LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
-      alpine=${ALPINE_VERSION} \
-      jolokia=${JOLOKIA_VERSION} \
-      version=${BASE_IMAGE_VERSION} \
-      org.label-schema.build-date=${buildDate} \
-      org.label-schema.docker.dockerfile="/Dockerfile" \
-      org.label-schema.license="Apache License - Version 2.0" \
-      org.label-schema.name="Wingnut - Cloud Ready Openshift OpenJDK baseimage " \
-      org.label-schema.vcs-ref=${gitSha} \
-      org.label-schema.vcs-type="Github" \
-      org.label-schema.vcs-url="https://github.com/skatteetaten/wingnut"

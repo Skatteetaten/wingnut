@@ -37,7 +37,6 @@ auroradocker {
   imageName = 'aurora/wingnut'
   workingDir = "src/main/docker"
   buildArgs = [
-      alpineVersion:"3.6",
       jolokiaVersion: "1.3.7",
       javaMajorVersion: "8",
       javaMinorVersion: "131",
