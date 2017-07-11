@@ -29,7 +29,6 @@ def static gitSha() {
 
 }
 
-
 apply plugin: 'base'
 apply plugin: 'ske.plugins.aurora'
 apply plugin: 'ske.plugins.aurora-docker'
@@ -46,12 +45,8 @@ auroradocker {
       baseImageVersion: version,
       buildDate: buildTime(),
       gitSha: gitSha()
-
-
   ]
 }
-
-
 
 
 task wrapper(type: Wrapper) {
