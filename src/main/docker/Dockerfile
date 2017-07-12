@@ -14,11 +14,13 @@ LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_B
       jolokia=${JOLOKIA_VERSION} \
       version=${BASE_IMAGE_VERSION} \
       org.label-schema.build-date=${buildDate} \
-      org.label-schema.docker.dockerfile="/Dockerfile" \
-      org.label-schema.license="Apache License - Version 2.0" \
-      org.label-schema.name="Wingnut - Cloud Ready Openshift OpenJDK baseimage" \
+      org.label-schema.name="Wingnut" \
+      org.label-schema.description="Cloud Ready Openshift OpenJDK baseimage" \
+      org.label-schema.usage="https://github.com/skatteetaten/wingnut" \
       org.label-schema.vcs-ref=${gitSha} \
-      org.label-schema.vcs-type="Github" \
+      org.label-schema.schema-version = "1.0" \
+      org.label-schema.version= "${baseImageVersion}" \
+      org.label-schema.vendor = "Skatteetaten SITS/The Norwegian Tax Administration"
       org.label-schema.vcs-url="https://github.com/skatteetaten/wingnut"
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.${javaMajorVersion}-openjdk
