@@ -12,10 +12,6 @@ node {
     checkout scm
   }
 
-  stage('Build') {
-    sh "./gradlew clean buildImage"
-  }
-
   stage('Build Docker image') {
     openshift.buildImage('wingnut', git.getCommitId())
   }
