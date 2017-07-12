@@ -4,24 +4,14 @@ ARG javaMinorVersion
 ARG javaBuildVersion
 ARG jolokiaVersion
 ARG baseImageVersion
-ARG buildDate
-ARG gitSha
 
 MAINTAINER The Norwegian Tax Administration <utvpaas@skatteetaten.no>
 
 LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
       alpine=3.6 \
       jolokia=${JOLOKIA_VERSION} \
-      version=${BASE_IMAGE_VERSION} \
-      org.label-schema.build-date=${buildDate} \
-      org.label-schema.name="Wingnut" \
-      org.label-schema.description="Cloud Ready Openshift OpenJDK baseimage" \
-      org.label-schema.usage="https://github.com/skatteetaten/wingnut" \
-      org.label-schema.vcs-ref=${gitSha} \
-      org.label-schema.schema-version = "1.0" \
-      org.label-schema.version= "${baseImageVersion}" \
-      org.label-schema.vendor = "Skatteetaten SITS/The Norwegian Tax Administration"
-      org.label-schema.vcs-url="https://github.com/skatteetaten/wingnut"
+      version=${BASE_IMAGE_VERSION}
+
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.${javaMajorVersion}-openjdk
 
