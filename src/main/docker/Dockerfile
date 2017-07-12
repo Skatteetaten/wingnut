@@ -34,8 +34,7 @@ ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
     BASE_IMAGE_VERSION=${baseImageVersion} \
     ALPINE_VERSION=3.6\
-    TRUST_STORE=$JAVA_HOME/jre/lib/security/cacerts \
-    TZ="Europe/Oslo"
+    TRUST_STORE=$JAVA_HOME/jre/lib/security/cacerts
 
 ADD jolokia /opt/jolokia
 
