@@ -3,7 +3,7 @@
 # Detect whether running in a container and set appropriate options
 # for limiting Java VM resources
 #
-# Usage: JAVA_OPTIONS="$(java-default-options.sh)"
+# Usage: JAVA_OPTIONS="$(java-options.sh)"
 
 # Env Vars evaluated:
 
@@ -70,5 +70,19 @@ cpu_core_tunning() {
   fi
 }
 
+jolokia() {
+  if [ "x$JOLOKIA_PATH" != x ]; then
+    echo "-javaagent:$JOLOKIA_PATH=host=0.0.0.0,port=8778,protocol=https"
+  fi
+}
+
+debug_options() {
+  if [ "x${REMOTE_DEBUG}" == "xtrue" ]; then
+    local debug_port=${DEBUG_PORT:-5005}
+    echo "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${debug_port}"
+  fi
+}
+
+
 # Echo options, trimming trailing and multiple spaces
-echo "$(max_memory) $(diagnostics) $(cpu_core_tunning)" | awk '$1=$1'
+echo "$JAVA_OPTIONS $(max_memory) $(diagnostics) $(cpu_core_tunning) $(jolokia) $(debug_options)" | awk '$1=$1'

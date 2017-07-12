@@ -1,19 +1,20 @@
 # Wingnut
 
-Cloud ready openjdk base image built using alpine.
+Cloud ready openjdk base image built using alpine targeted towards Kubernetes/Openshift
 
 ## How to use
 This base image will trap the running of the script `$HOME/application/bin/start`
 If you do not want this behavior then override the CMD directive
 
-The following ENV vars are set that you can use in your JAVA invocation
- - JAVA_DEBUG_ARGS: if `REMOTE_DEBUG` is set we create a remote debugging connection on `DEBUG_PORT`
- - JOLOKIA_PATH: use the following to enable jolokia `-javaagent:\$JOLOKIA_PATH=host=0.0.0.0,port=8778,protocol=https`
- - JAVA_OPTS: contains XMX set to 80% of cgroups memory
- - JAVA_MAX_MEM_RATIO: change the default memory ratio. 80 is default
- - 
+You can set the following ENV vars to control the behavior
+ - REMOTE_DEBUG: turn on remote debuging on DEBUG_PORT (default 5005)
+ - JAVA_MAX_MEM_RATIO: adjust the ratio of memory set as XMX. Default 80%
+ - JAVA_DIAGNOSTICS: set this to turn on GC diagnostics
+ - JAVA_CORE_LIMIT: Force the core limit to this value
+ 
+When creating your `java` executable line in your start script make sure to include the `$JAVA_OPTS` ENV var
 
-see example directory for a very basic Dockerfile that builds a java image
+See example directory for a very basic Dockerfile that builds a java image
 
 ## How to build
 ./gradlew  buildImage
