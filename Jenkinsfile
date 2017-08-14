@@ -14,7 +14,7 @@ node {
 
   stage('Bygg OpenShift-image') {
     def commitId = git.getCommitId()
-    openshift.buildImage('wingnut', commitId, 'github')
+    openshift.buildImageWithCredentials('wingnut', commitId, 'github')
   }
 
 }
