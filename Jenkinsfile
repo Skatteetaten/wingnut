@@ -1,9 +1,9 @@
 #!groovy
 
 node {
-
   def openshift, git
-  fileLoader.withGit('https://git.sits.no/git/scm/ao/aurora-pipeline-scripts.git', 'v3.1.0') {
+  def version="v3.1.0"
+  fileLoader.withGit('https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git', version) {
     openshift = fileLoader.load('openshift/openshift');
     git = fileLoader.load('git/git');
   }
