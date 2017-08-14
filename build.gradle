@@ -18,10 +18,19 @@ buildscript {
   }
 }
 
+
+
+
 repositories {
   mavenCentral()
   jcenter()
   mavenLocal()
+}
+
+ext {
+  git = org.ajoberstar.grgit.Grgit.open(file('.'))
+
+  revision = git.head().id
 }
 
 
