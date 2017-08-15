@@ -48,6 +48,7 @@ apply plugin: 'no.skatteetaten.plugins.aurora-docker'
 
 auroradocker {
   imageName = 'aurora/wingnut'
+  registry = System.getProperty("registry") ?: "uil0paas-utv-registry01.skead.no:5000"
   workingDir = "src/main/docker"
   buildArgs = [
       jolokiaVersion: "1.3.7",
