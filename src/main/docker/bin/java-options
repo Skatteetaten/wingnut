@@ -71,7 +71,7 @@ cpu_core_tunning() {
 }
 
 jolokia() {
-  if [ "x$JOLOKIA_PATH" != x ]; then
+  if [ "x$JOLOKIA_PATH" != x ] && [ -z ${DISABLE_JOLOKIA+x} ]; then
     echo "-javaagent:$JOLOKIA_PATH=host=0.0.0.0,port=8778,protocol=https"
   fi
 }
