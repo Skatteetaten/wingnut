@@ -1,27 +1,19 @@
-import java.text.SimpleDateFormat
-import java.util.Date
 import no.skatteetaten.aurora.gradle.plugins.docker.DockerTools
 import no.skatteetaten.aurora.gradle.plugins.docker.ProcessTools
-import java.io.*
 
 buildscript {
   repositories {
     mavenCentral()
     jcenter()
-    mavenLocal()
   }
   dependencies {
     classpath(
-        "no.skatteetaten.aurora.gradle.plugins:aurora-gradle-plugin:1.1.0",
+        "no.skatteetaten.aurora.gradle.plugins:aurora-gradle-plugin:1.2.0",
         "no.skatteetaten.aurora.gradle.plugins:aurora-docker-plugin:1.0.1",
         "org.ajoberstar:grgit:1.1.0"
-
     )
   }
 }
-
-
-
 
 repositories {
   mavenCentral()
@@ -29,17 +21,9 @@ repositories {
   mavenLocal()
 }
 
-ext {
-  git = org.ajoberstar.grgit.Grgit.open(file('.'))
-
-  revision = git.head().id
-}
-
-
 ext.aurora = [
     requireStaging: false,
     applyNexusRepositories: false
-
 ]
 
 apply plugin: 'base'
