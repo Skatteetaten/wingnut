@@ -25,7 +25,7 @@
 #
 # Check for memory options and calculate a sane default if not given
 max_metaspace() {
-  # Check whether -Xmx is already given in JAVA_OPTIONS. Then we dont
+  # Check whether metaspace is already given in JAVA_OPTIONS. Then we dont
   # do anything here
   if echo "${JAVA_OPTIONS}" | grep -q -- "-XX:MaxMetaspaceSize"; then
     return
@@ -36,8 +36,8 @@ max_metaspace() {
     return
   fi
 
-  # Check for the 'real memory size' and caluclate mx from a ratio
-  # given (default is 80%)
+  # Check for the 'real memory size' and caluclate metaspace from a ratio
+  # given (default is 15%)
   if [ "x$CONTAINER_MAX_MEMORY" != x ]; then
     local max_mem="${CONTAINER_MAX_MEMORY}"
     local ratio=${JAVA_MAX_METASPACE_RATIO:-15}
@@ -61,14 +61,12 @@ max_memory() {
   fi
 
   # Check for the 'real memory size' and caluclate mx from a ratio
-  # given (default is 80%)
+  # given (default is 70%)
   if [ "x$CONTAINER_MAX_MEMORY" != x ]; then
     local max_mem="${CONTAINER_MAX_MEMORY}"
     local ratio=${JAVA_MAX_MEM_RATIO:-70}
     local mx=$(echo "${max_mem} ${ratio} 1048576" | awk '{printf "%d\n" , ($1*$2)/(100*$3) + 0.5}')
 
-    local metaspaceRatio=${JAVA_MAX_META_RATIO:-15}
-    local metaspace=$(echo "${max_mem} ${metaspaceRatio} 1048576" | awk '{printf "%d\n" , ($1*$2)/(100*$3) + 0.5}')
     echo "-Xmx${mx}m"
   fi
 }
