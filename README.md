@@ -8,9 +8,12 @@ If you do not want this behavior then override the CMD directive
 
 You can set the following ENV vars to control the behavior
  - REMOTE_DEBUG: turn on remote debuging on DEBUG_PORT (default 5005)
- - JAVA_MAX_MEM_RATIO: adjust the ratio of memory set as XMX. Default 80%
+ - JAVA_MAX_MEM_RATIO: adjust the ratio of memory set as XMX. Default 25%
+ - JAVA_MAX_METASPACE_RATIO: adjust the ratio of memory set as MaxMetaspace. Default 15%
+ - DISABLE_EXIT_ON_OOM: set to anything to disable exit jvm if OOM
  - JAVA_DIAGNOSTICS: set this to turn on GC diagnostics
  - JAVA_CORE_LIMIT: Force the core limit to this value
+ - DISABLE_JOLOKIA: set to disable Jolokia agent
  
 When creating your `java` executable line in your start script make sure to include the `$JAVA_OPTS` ENV var
 
