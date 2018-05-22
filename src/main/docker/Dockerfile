@@ -1,4 +1,4 @@
-FROM aurora/turbo:feature_ATO_172_Turbo-SNAPSHOT
+FROM aurora/turbo:master-SNAPSHOT
 ARG javaMajorVersion=8
 ARG javaMinorVersion
 ARG javaBuildVersion
