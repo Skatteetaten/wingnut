@@ -1,4 +1,4 @@
-FROM aurora/turbo:master-SNAPSHOT
+FROM aurora/turbo:0.0.1
 ARG javaMajorVersion=8
 ARG javaMinorVersion
 ARG javaBuildVersion
