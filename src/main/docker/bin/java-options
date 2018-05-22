@@ -25,10 +25,36 @@
 #
 
 # Check for memory options and calculate a sane default if not given
+max_metaspace() {
+  # Check whether metaspace is already given in JAVA_OPTIONS. Then we dont
+  # do anything here
+  if echo "${JAVA_OPTIONS}" | grep -q -- "-XX:MaxMetaspaceSize"; then
+    return
+  fi
+
+  # Check if enabled
+  if [ "x$JAVA_MAX_METASPACE_RATIO" != x ]; then
+
+    # Check for the 'real memory size' and caluclate metaspace from a ratio
+    # given (default is 15%)
+    if [ "x$CONTAINER_MAX_MEMORY" != x ]; then
+      local max_mem="${CONTAINER_MAX_MEMORY}"
+      local metaspaceRatio=${JAVA_MAX_METASPACE_RATIO:-15}
+      local metaspace=$(echo "${max_mem} ${metaspaceRatio} 1048576" | awk '{printf "%d\n" , ($1*$2)/(100*$3) + 0.5}')
+      echo "-XX:MaxMetaspaceSize=${metaspace}m"
+    fi
+  fi
+}
+
+# Check for memory options and calculate a sane default if not given
 max_memory() {
   # Check whether -Xmx is already given in JAVA_OPTIONS. Then we dont
   # do anything here
   if echo "${JAVA_OPTIONS}" | grep -q -- "-Xmx"; then
+    return
+  fi
+
+  if echo "${JAVA_OPTIONS}" | grep -q -- "-XX:+UseCGroupMemoryLimitForHeap"; then
     return
   fi
 
@@ -38,18 +64,25 @@ max_memory() {
   fi
 
   # Check for the 'real memory size' and caluclate mx from a ratio
-  # given (default is 80%)
+  # given (default is 25%)
   if [ "x$CONTAINER_MAX_MEMORY" != x ]; then
     local max_mem="${CONTAINER_MAX_MEMORY}"
-    local ratio=${JAVA_MAX_MEM_RATIO:-80}
+    local ratio=${JAVA_MAX_MEM_RATIO:-25}
     local mx=$(echo "${max_mem} ${ratio} 1048576" | awk '{printf "%d\n" , ($1*$2)/(100*$3) + 0.5}')
+
     echo "-Xmx${mx}m"
+  fi
+}
+
+exitoom() {
+  if [ "x$ENABLE_EXIT_ON_OOM" != "x" ]; then
+   echo "-XX:+ExitOnOutOfMemoryError"
   fi
 }
 
 # Switch on diagnostics except when switched off
 diagnostics() {
-  if [ "x$JAVA_DIAGNOSTICS" != "x" ]; then
+  if [ "x$ENABLE_JAVA_DIAGNOSTICS" != "x" ]; then
     echo "-XX:NativeMemoryTracking=summary -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UnlockDiagnosticVMOptions"
   fi
 }
@@ -77,7 +110,7 @@ jolokia() {
 }
 
 debug_options() {
-  if [ "x${REMOTE_DEBUG}" == "xtrue" ]; then
+  if [ "x${ENABLE_REMOTE_DEBUG}" == "xtrue" ]; then
     local debug_port=${DEBUG_PORT:-5005}
     echo "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${debug_port}"
   fi
@@ -85,4 +118,4 @@ debug_options() {
 
 
 # Echo options, trimming trailing and multiple spaces
-echo "$JAVA_OPTIONS $(max_memory) $(diagnostics) $(cpu_core_tunning) $(jolokia) $(debug_options)" | awk '$1=$1'
+echo "$JAVA_OPTIONS $(max_memory) $(max_metaspace) $(exitoom) $(diagnostics) $(cpu_core_tunning) $(jolokia) $(debug_options)" | awk '$1=$1'
