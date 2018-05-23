@@ -17,7 +17,7 @@ ENV JAVA_HOME="/usr/lib/jvm/java-1.${javaMajorVersion}-openjdk"
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
     JAVA_VERSION_BUILD=${javaBuildVersion} \
-    JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
+    JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     PATH=${PATH}:$JAVA_HOME/jre/bin \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
@@ -27,11 +27,11 @@ ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
 ADD http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar /opt/jolokia
 
 RUN chmod a=rwx /opt/jolokia && \
-    microdnf install --nodocs ${JAVA_PACKAGE}
+    microdnf install --nodocs ${JAVA_PACKAGE} && \
+    microdnf clean all
 
 # Use tini as subreaper in Docker container to adopt zombie processes
-ADD https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm /tmp/
-RUN rpm -i /tmp/tini_${tini_version}-amd64.rpm
+RUN rpm -i https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm
 
 ADD bin $HOME/bin
 WORKDIR ${HOME}
