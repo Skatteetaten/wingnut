@@ -55,7 +55,8 @@ auroradocker {
       javaMajorVersion: "8",
       javaMinorVersion: "171",
       javaBuildVersion: "4.b10.fc28",
-      baseImageVersion: version
+      baseImageVersion: version,
+      radishVersion: "develop-SNAPSHOT"
   ]
 }
 

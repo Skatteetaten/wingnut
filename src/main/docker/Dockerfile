@@ -4,7 +4,8 @@ ARG javaMinorVersion
 ARG javaBuildVersion
 ARG jolokiaVersion
 ARG baseImageVersion
-ARG tini_version=0.18.0
+#ARG tini_version=0.18.0
+ARG radishVersion=0.0.1
 
 LABEL maintainer="The Norwegian Tax Administration <utvpaas@skatteetaten.no>" \
       java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
@@ -30,12 +31,22 @@ RUN chmod a=rwx /opt/jolokia && \
     microdnf install --nodocs ${JAVA_PACKAGE}
 
 # Use tini as subreaper in Docker container to adopt zombie processes
-ADD https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm /tmp/
-RUN rpm -i /tmp/tini_${tini_version}-amd64.rpm
+#ADD https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm /tmp/
+#RUN rpm -i /tmp/tini_${tini_version}-amd64.rpm
+
+RUN echo ${radishVersion}
+
+ADD http://aurora/nexus/service/local/artifact/maven/content?g=ske.aurora.openshift&a=radish&v=${radishVersion}&r=public-with-staging&e=tar.gz /tmp/radish.tar.gz
+#ADD https://aurora/nexus/service/local/repositories/${releasesOrSnapshots}/content/ske/aurora/openshift/radish/${radishVersion}/radish-${radishVersion}.tar.gz /tmp/radish.tar.gz
+RUN microdnf install --nodocs tar
+RUN tar -xf /tmp/radish.tar.gz -C /usr/bin/
+
 
 ADD bin $HOME/bin
 WORKDIR ${HOME}
 RUN chmod -R a=rwx ${HOME}
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/u01/bin/run"]
+#ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/radish"]
+#CMD ["/u01/bin/run"]
+#CMD ["/usr/bin/radish"]
