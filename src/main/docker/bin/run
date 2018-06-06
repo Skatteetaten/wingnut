@@ -5,6 +5,8 @@ source $DIR/container-limits
 
 export JAVA_OPTS=$($DIR/java-options)
 
+export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true"
+
 cd application
 echo "Starting application in $(pwd)... $(date)"
 

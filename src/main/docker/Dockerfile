@@ -1,52 +1,39 @@
-FROM alpine:3.6
+FROM aurora/turbo:0.0.2
 ARG javaMajorVersion=8
 ARG javaMinorVersion
 ARG javaBuildVersion
 ARG jolokiaVersion
 ARG baseImageVersion
+ARG tini_version=0.18.0
 
-MAINTAINER The Norwegian Tax Administration <utvpaas@skatteetaten.no>
-
-LABEL java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
-      alpine=3.6 \
+LABEL maintainer="The Norwegian Tax Administration <utvpaas@skatteetaten.no>" \
+      java=openjdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD} \
       jolokia=${JOLOKIA_VERSION} \
       version=${BASE_IMAGE_VERSION}
 
-
-ENV JAVA_HOME /usr/lib/jvm/java-1.${javaMajorVersion}-openjdk
+ENV JAVA_HOME=/usr/lib/jvm/jre
 
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
     JAVA_VERSION_BUILD=${javaBuildVersion} \
-    JAVA_PACKAGE=openjdk${javaMajorVersion}-jre \
+    JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     PATH=${PATH}:$JAVA_HOME/jre/bin \
-    LANG=C.UTF-8 \
-    HOME=/u01 \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
     BASE_IMAGE_VERSION=${baseImageVersion} \
-    ALPINE_VERSION=3.6\
     TRUST_STORE=$JAVA_HOME/jre/lib/security/cacerts
 
-ADD jolokia /opt/jolokia
+ADD http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar /opt/jolokia
 
-RUN chmod -R 777 /opt/jolokia && \
-    apk add "openjdk8-jre=${JAVA_VERSION_MAJOR}.${JAVA_VERSION_MINOR}.${JAVA_VERSION_BUILD}" -f --update-cache --repository http://nl.alpinelinux.org/alpine/edge/community && \
-    apk add --no-cache \
-      dumb-init \
-      drill \
-      tcpdump \
-      ngrep \
-      bash \
-      tzdata && \
-    mkdir $HOME
+RUN chmod a=rwx /opt/jolokia && \
+    microdnf install --nodocs ${JAVA_PACKAGE} && \
+    microdnf clean all && \
+# Use tini as subreaper in Docker container to adopt zombie processes
+    rpm -i https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm
 
 ADD bin $HOME/bin
-
-RUN chmod -R 777 $HOME
-
 WORKDIR ${HOME}
+RUN chmod -R a=rwx ${HOME}
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/u01/bin/run"]
