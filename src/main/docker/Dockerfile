@@ -1,4 +1,4 @@
-FROM aurora/turbo:0.0.1
+FROM aurora/turbo:0.0.2
 ARG javaMajorVersion=8
 ARG javaMinorVersion
 ARG javaBuildVersion
@@ -16,7 +16,7 @@ ENV JAVA_HOME="/usr/lib/jvm/java-1.${javaMajorVersion}-openjdk"
 
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
-    JAVA_VERSION_BUILD=${javaBuildVersion} \
+    JAVA_VERSION_BUILD=${javaBuhttps://github.com/Skatteetaten/wingnut/pull/7/files/f075705a9e1bb13a281533938722b5a7543789fbildVersion} \
     JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     PATH=${PATH}:$JAVA_HOME/jre/bin \
     JOLOKIA_VERSION=${jolokiaVersion} \
@@ -28,10 +28,9 @@ ADD http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jol
 
 RUN chmod a=rwx /opt/jolokia && \
     microdnf install --nodocs ${JAVA_PACKAGE} && \
-    microdnf clean all
-
+    microdnf clean all && \
 # Use tini as subreaper in Docker container to adopt zombie processes
-RUN rpm -i https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm
+    rpm -i https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm
 
 ADD bin $HOME/bin
 WORKDIR ${HOME}
