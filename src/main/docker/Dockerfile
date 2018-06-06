@@ -11,12 +11,12 @@ LABEL maintainer="The Norwegian Tax Administration <utvpaas@skatteetaten.no>" \
       jolokia=${JOLOKIA_VERSION} \
       version=${BASE_IMAGE_VERSION}
 
+ENV JAVA_HOME=/usr/lib/jvm/jre
 
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
     JAVA_VERSION_BUILD=${javaBuildVersion} \
     JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
-    JAVA_HOME=/usr/lib/jvm/jre \
     PATH=${PATH}:$JAVA_HOME/jre/bin \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
