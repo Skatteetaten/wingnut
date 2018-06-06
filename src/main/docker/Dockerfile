@@ -12,7 +12,7 @@ LABEL maintainer="The Norwegian Tax Administration <utvpaas@skatteetaten.no>" \
       version=${BASE_IMAGE_VERSION}
 
 
-ENV JAVA_HOME="/usr/lib/jvm/java-1.${javaMajorVersion}-openjdk"
+ENV JAVA_HOME=/usr/lib/jvm/java-1.${javaMajorVersion}-openjdk
 
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
