@@ -51,10 +51,10 @@ auroradocker {
   registry = System.getProperty("registry") ?: "uil0paas-utv-registry01.skead.no:5000"
   workingDir = "src/main/docker"
   buildArgs = [
-      jolokiaVersion: "1.3.7",
+      jolokiaVersion: "1.5.0",
       javaMajorVersion: "8",
-      javaMinorVersion: "141",
-      javaBuildVersion: "15-r0",
+      javaMinorVersion: "171",
+      javaBuildVersion: "4.b10.fc28",
       baseImageVersion: version
   ]
 }
@@ -100,7 +100,7 @@ task testOutputImage() {
     if (result.process.exitValue() != 0) {
       throw new GradleException("Unable to run image. Inspect output for details.")
     }
-    assert result.output.contains("JAVA_OPTS=-Xmx410m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2")
+    assert result.output.contains("openjdk version")
   }
 }
 
