@@ -2,7 +2,7 @@
 
 node {
   def openshift, git
-  def version="feature/AOT-177"
+  def version="AOT177"
   fileLoader.withGit('https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git', version) {
     openshift = fileLoader.load('openshift/openshift');
     git = fileLoader.load('git/git');
