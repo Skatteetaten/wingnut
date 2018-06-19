@@ -34,12 +34,18 @@ RUN chmod a=rwx /opt/jolokia && \
 #ADD https://github.com/krallin/tini/releases/download/v${tini_version}/tini_${tini_version}-amd64.rpm /tmp/
 #RUN rpm -i /tmp/tini_${tini_version}-amd64.rpm
 
-RUN echo ${radishVersion}
+RUN microdnf install --nodocs tar since
 
+#temporary stuff
+RUN microdnf install procps
+
+RUN echo ${radishVersion}
 ADD http://aurora/nexus/service/local/artifact/maven/content?g=ske.aurora.openshift&a=radish&v=${radishVersion}&r=public-with-staging&e=tar.gz /tmp/radish.tar.gz
 #ADD https://aurora/nexus/service/local/repositories/${releasesOrSnapshots}/content/ske/aurora/openshift/radish/${radishVersion}/radish-${radishVersion}.tar.gz /tmp/radish.tar.gz
-RUN microdnf install --nodocs tar
+
 RUN tar -xf /tmp/radish.tar.gz -C /usr/bin/
+
+
 
 
 ADD bin $HOME/bin
@@ -47,6 +53,5 @@ WORKDIR ${HOME}
 RUN chmod -R a=rwx ${HOME}
 
 #ENTRYPOINT ["/usr/bin/tini", "--"]
-ENTRYPOINT ["/usr/bin/radish"]
-#CMD ["/u01/bin/run"]
-#CMD ["/usr/bin/radish"]
+#ENTRYPOINT ["/usr/bin/radish"]
+CMD ["/u01/bin/run"]

@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "RUNNING START"
+
+exec radish $JVM_OPTS $CLASSPATH $JAVA_OPTS $MAIN_CLASS $APPLICATION_ARGS
