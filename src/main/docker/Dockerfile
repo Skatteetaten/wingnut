@@ -19,7 +19,7 @@ ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     # For Fedora-minimal
     # JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     #JAVA_PACKAGE="1:java-1.${javaMajorVersion}.0-openjdk-headless-1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
-    JAVA_PACKAGE="java-1.8.0-openjdk-1.8.0.171-8" \
+    JAVA_PACKAGE="java-1.8.0-openjdk-headless" \
     PATH=${PATH}:$JAVA_HOME/jre/bin \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
