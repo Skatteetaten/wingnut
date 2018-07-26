@@ -3,9 +3,11 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $DIR/container-limits
 
-#export JAVA_OPTS=$($DIR/java-options)
+export JAVA_OPTS=$($DIR/java-options)
 
-cd application
+export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true"
+
+cd ${HOME}/application
 echo "Starting application in $(pwd)... $(date)"
 
 # We set a trap on TERM so we can have code running after the child has terminated. OpenShift gives an

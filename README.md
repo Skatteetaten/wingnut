@@ -1,6 +1,6 @@
 # Wingnut
 
-Cloud ready openjdk base image built using fedora-minimal targeted towards Kubernetes/Openshift
+Cloud ready openjdk base image built using rhel-atomic targeted towards Kubernetes/Openshift
 
 ## How to use
 This base image will trap the running of the script `$HOME/application/bin/start`
