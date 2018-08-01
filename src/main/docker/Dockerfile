@@ -11,7 +11,7 @@ LABEL maintainer="The Norwegian Tax Administration <utvpaas@skatteetaten.no>" \
       jolokia=${JOLOKIA_VERSION} \
       version=${BASE_IMAGE_VERSION}
 
-ENV JAVA_HOME=/usr/lib/jvm/jre
+ENV JAVA_HOME=/opt/jdk-11
 
 ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     JAVA_VERSION_MINOR=${javaMinorVersion} \
@@ -20,25 +20,37 @@ ENV JAVA_VERSION_MAJOR=${javaMajorVersion} \
     # JAVA_PACKAGE="java-1.${javaMajorVersion}.0-openjdk-headless-1:1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     #JAVA_PACKAGE="1:java-1.${javaMajorVersion}.0-openjdk-headless-1.${javaMajorVersion}.0.${javaMinorVersion}-${javaBuildVersion}.x86_64" \
     JAVA_PACKAGE="java-1.8.0-openjdk-headless" \
-    PATH=${PATH}:$JAVA_HOME/jre/bin \
+    PATH=${PATH}:$JAVA_HOME/bin \
     JOLOKIA_VERSION=${jolokiaVersion} \
     JOLOKIA_PATH=/opt/jolokia/jolokia-jvm-${jolokiaVersion}-agent.jar \
     BASE_IMAGE_VERSION=${baseImageVersion} \
-    TRUST_STORE=$JAVA_HOME/jre/lib/security/cacerts
+    TRUST_STORE=$JAVA_HOME/lib/security/cacerts
 
 ADD http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar ${JOLOKIA_PATH}
 
 # RPM packages for dumb-init is not avialable for RHEL
 ADD https://github.com/Yelp/dumb-init/releases/download/v${dumbInitVersion}/dumb-init_${dumbInitVersion}_amd64 /usr/bin/dumb-init
 
+WORKDIR /opt
+
 RUN chmod go=u /opt/jolokia && \
     chmod a+x /usr/bin/dumb-init && \
-    microdnf -h ; \
     microdnf install --nodocs --enablerepo rhel-7-server-rpms \
       # For fedora-minimal: dumb-init && \
-      ${JAVA_PACKAGE} && \
+      curl \
+      gzip \
+      tar && \
+    #  ${JAVA_PACKAGE} && \
     microdnf clean all && \
-    update-ca-trust extract
+    curl "https://download.java.net/java/early_access/jdk11/24/GPL/openjdk-11-ea+24_linux-x64_bin.tar.gz" \
+          | tar -xzf - && \
+    keytool -keystore ${JAVA_HOME}/lib/security/cacerts \
+      -importcert \
+      -trustcacerts \
+      -alias SKE-ROOT-CA \
+      -file /etc/pki/ca-trust/source/anchors/SKEROOTCA.cer \
+      -noprompt \
+      -storepass changeit
 
 ADD resources/bin ${HOME}/bin
 ADD resources/config ${HOME}/config
