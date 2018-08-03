@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-eval $(/u01/bin/radish generateEnvScript)
+$(/u01/bin/radish generateEnvScript)
 
 /u01/bin/radish generateSplunkStanzas -o /u01/logs
 
